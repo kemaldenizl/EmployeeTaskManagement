@@ -1,3 +1,5 @@
+using EmployeeTaskManagement.Business;
+using EmployeeTaskManagement.DataAccess;
 using EmployeeTaskManagement.DataAccess.Concrete.EntityFramework.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ EmployeeTaskManagementContext.ConnectionString =
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddDataAccessServices();
+builder.Services.AddBusinessServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
