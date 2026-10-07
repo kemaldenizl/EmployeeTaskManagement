@@ -1,4 +1,10 @@
+using EmployeeTaskManagement.DataAccess.Concrete.EntityFramework.Contexts;
+
 var builder = WebApplication.CreateBuilder(args);
+
+EmployeeTaskManagementContext.ConnectionString =
+    builder.Configuration.GetConnectionString("EmployeeTaskManagementContext")
+    ?? throw new InvalidOperationException("'EmployeeTaskManagementContext' connection string not found.");
 
 // Add services to the container.
 
