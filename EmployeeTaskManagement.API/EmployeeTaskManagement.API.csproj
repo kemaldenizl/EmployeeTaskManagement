@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeTaskManagement.Business\EmployeeTaskManagement.Business.csproj" />
+    <ProjectReference Include="..\EmployeeTaskManagement.DataAccess\EmployeeTaskManagement.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
