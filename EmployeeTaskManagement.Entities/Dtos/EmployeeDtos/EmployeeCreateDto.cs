@@ -1,6 +1,6 @@
 using EmployeeTaskManagement.Core.Entities;
 
-namespace EmployeeTaskManagement.Entities.Concrete
+namespace EmployeeTaskManagement.Entities.Dtos.EmployeeDtos
 {
     public class EmployeeCreateDto : IDto {
         public string FirstName { get; set; }

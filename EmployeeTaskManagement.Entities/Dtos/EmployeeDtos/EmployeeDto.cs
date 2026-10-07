@@ -1,6 +1,7 @@
 using EmployeeTaskManagement.Core.Entities;
+using EmployeeTaskManagement.Entities.Dtos.TaskItemDtos;
 
-namespace EmployeeTaskManagement.Entities.Concrete
+namespace EmployeeTaskManagement.Entities.Dtos.EmployeeDtos
 {
     public class EmployeeDto : IDto {
         public int Id { get; set; }
