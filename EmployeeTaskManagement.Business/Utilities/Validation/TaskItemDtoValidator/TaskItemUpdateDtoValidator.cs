@@ -7,7 +7,7 @@ namespace EmployeeTaskManagement.Business.Utilities.Validation.TaskItemDtoValida
     {
         public TaskItemUpdateDtoValidator()
         {
-            
+            RuleFor(t => t.Title).NotEmpty();
         }
     }
 }

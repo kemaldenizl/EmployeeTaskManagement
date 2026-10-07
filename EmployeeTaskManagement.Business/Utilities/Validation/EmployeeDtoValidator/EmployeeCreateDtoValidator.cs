@@ -7,7 +7,8 @@ namespace EmployeeTaskManagement.Business.Utilities.Validation.EmployeeDtoValida
     {
         public EmployeeCreateDtoValidator()
         {
-            
+            RuleFor(e => e.Email).EmailAddress();
+                
         }
     }
 }
