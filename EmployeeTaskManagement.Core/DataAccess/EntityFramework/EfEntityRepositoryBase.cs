@@ -13,7 +13,7 @@ namespace EmployeeTaskManagement.Core.DataAccess.EntityFramework
 	where TEntity : class, IEntity, new()
 	where TContext : DbContext, new()
 	{
-        public IList<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
+        public IList<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null)
 		{
 			using (var context = new TContext())
 			{
