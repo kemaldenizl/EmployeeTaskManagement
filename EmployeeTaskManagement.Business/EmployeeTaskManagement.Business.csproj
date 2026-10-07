@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeTaskManagement.DataAccess\EmployeeTaskManagement.DataAccess.csproj" />
+    <ProjectReference Include="..\EmployeeTaskManagement.Core\EmployeeTaskManagement.Core.csproj" />
+    <ProjectReference Include="..\EmployeeTaskManagement.Entities\EmployeeTaskManagement.Entities.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
