@@ -1,12 +1,14 @@
 using System.Threading.Tasks;
 using EmployeeTaskManagement.Business.Abstract;
 using EmployeeTaskManagement.Entities.Dtos.TaskItemDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeTaskManagement.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TaskItemsController : ControllerBase
     {
         private readonly ITaskItemService _taskItemService;
