@@ -11,7 +11,7 @@
 ### 1. Projeyi klonlayın ve Bağımlılıkları Yükleyin
 
 ```
-git clone <repository-url> && cd EmployeeTaskManagement
+git clone https://github.com/kemaldenizl/EmployeeTaskManagement.git && cd EmployeeTaskManagement
 dotnet restore && dotnet build
 ```
 
@@ -127,3 +127,9 @@ Yanıt:
 ```
 { "success": true, "message": null }
 ```
+
+## Kullanılan Teknolojiler
+JWT: Kimlik Doğrulama token üreticisi
+FluentValidation: Validation kütüphanesi.
+AutoMapper: DTO ve Entity için mappingi soyutlayan basitleştiren kütüphane.
+EfCore: ADO.NET veri tabanı erişimini soyutlayan, güvenlik sağlayan ORM.
