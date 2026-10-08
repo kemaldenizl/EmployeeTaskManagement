@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using EmployeeTaskManagement.Core.Entities.Concrete;
 using EmployeeTaskManagement.Core.Utilities.Security.Encyption;
 using Microsoft.Extensions.Configuration;
@@ -39,9 +40,19 @@ namespace EmployeeTaskManagement.Core.Utilities.Security.Jwt
 				audience:tokenOptions.Audience,
 				expires:_accessTokenExpiration,
 				notBefore:DateTime.Now,
+				claims: CreateClaims(user),
 				signingCredentials: signingCredentials
 			);
 			return jwt;
+		}
+
+		private IEnumerable<Claim> CreateClaims(User user)
+		{
+			return new[]
+			{
+				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+				new Claim(ClaimTypes.Name, user.Username)
+			};
 		}
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using EmployeeTaskManagement.Core.Entities.Concrete;
 using EmployeeTaskManagement.Entities.Concrete;
 
 namespace EmployeeTaskManagement.DataAccess.Concrete.EntityFramework.Contexts
@@ -47,9 +48,21 @@ namespace EmployeeTaskManagement.DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.HasIndex(t => t.EmployeeId);
             });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+                entity.HasKey(u => u.Id);
+
+                entity.Property(u => u.Username).IsRequired().HasMaxLength(50);
+                entity.Property(u => u.PasswordHash).IsRequired();
+
+                entity.HasIndex(u => u.Username).IsUnique();
+            });
         }
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
