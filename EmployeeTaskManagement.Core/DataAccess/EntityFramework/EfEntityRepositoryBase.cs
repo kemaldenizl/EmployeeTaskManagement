@@ -13,47 +13,47 @@ namespace EmployeeTaskManagement.Core.DataAccess.EntityFramework
 	where TEntity : class, IEntity, new()
 	where TContext : DbContext, new()
 	{
-        public IList<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null)
+        public async Task<IList<TEntity>> GetAll(CancellationToken cancellationToken, Expression<Func<TEntity, bool>>? filter = null)
 		{
 			using (var context = new TContext())
 			{
 				return filter == null ? 
-					context.Set<TEntity>().ToList() :
-					context.Set<TEntity>().Where(filter).ToList();
+					await context.Set<TEntity>().ToListAsync(cancellationToken) :
+					await context.Set<TEntity>().Where(filter).ToListAsync(cancellationToken);
 			}
 		}
-        public TEntity Get(Expression<Func<TEntity, bool>> filter)
+        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
 		{
 			using (var context = new TContext())
 			{
-				return context.Set<TEntity>().SingleOrDefault(filter);
+				return await context.Set<TEntity>().SingleOrDefaultAsync(filter, cancellationToken);
 			}
 		}
-		public void Add(TEntity entity)
+		public async Task Add(TEntity entity, CancellationToken cancellationToken)
 		{
 			using (var context = new TContext())
 			{
 				var addedEntity = context.Entry(entity);
 				addedEntity.State = EntityState.Added;
-				context.SaveChanges();
+				await context.SaveChangesAsync(cancellationToken);
 			}
 		}
-        public void Update(TEntity entity)
+        public async Task Update(TEntity entity, CancellationToken cancellationToken)
 		{
 			using (var context = new TContext())
 			{
 				var updatedEntity = context.Entry(entity);
 				updatedEntity.State = EntityState.Modified;
-				context.SaveChanges();
+				await context.SaveChangesAsync(cancellationToken);
 			}
 		}
-		public void Delete(TEntity entity)
+		public async Task Delete(TEntity entity, CancellationToken cancellationToken)
 		{
 			using (var context = new TContext())
 			{
 				var deletedEntity = context.Entry(entity);
 				deletedEntity.State = EntityState.Deleted;
-				context.SaveChanges();
+				await context.SaveChangesAsync(cancellationToken);
 			}
 		}
 	}
