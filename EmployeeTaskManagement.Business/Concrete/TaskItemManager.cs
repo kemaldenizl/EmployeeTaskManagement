@@ -30,59 +30,53 @@ namespace EmployeeTaskManagement.Business.Concrete
             _updateValidator = updateValidator;
         }
 
-        public IDataResult<List<TaskItemDto>> GetAll(){
-            var taskItems = _taskItemRepository.GetAll();
+        public async Task<IDataResult<List<TaskItemDto>>> GetAll(CancellationToken cancellationToken){
+            var taskItems = await _taskItemRepository.GetAll(cancellationToken);
             var dtos = _mapper.Map<List<TaskItemDto>>(taskItems);
 
             return new SuccessDataResult<List<TaskItemDto>>(dtos);
         }
-        public IDataResult<List<TaskItemDto>> GetAllFromEmployee(int employeeId){
-            var taskItems = _taskItemRepository.GetAll(e => e.EmployeeId == employeeId);
-            var dtos = _mapper.Map<List<TaskItemDto>>(taskItems);
-
-            return new SuccessDataResult<List<TaskItemDto>>(dtos);
-        }
-        public IDataResult<TaskItemDto> Get(int id){
-            var taskItem = _taskItemRepository.Get(e => e.Id == id);
+        public async Task<IDataResult<TaskItemDto>> Get(int id, CancellationToken cancellationToken){
+            var taskItem = await _taskItemRepository.Get(e => e.Id == id, cancellationToken);
             var dto = _mapper.Map<TaskItemDto>(taskItem);
 
             return new SuccessDataResult<TaskItemDto>(dto);
         }
-        public IResult Create(TaskItemCreateDto taskItemCreateDto){
-            var validationResult = _createValidator.Validate(taskItemCreateDto);
+        public async Task<IResult> Create(TaskItemCreateDto taskItemCreateDto, CancellationToken cancellationToken){
+            var validationResult = await _createValidator.ValidateAsync(taskItemCreateDto, cancellationToken);
             if (!validationResult.IsValid){
                 return new ErrorResult(string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage)));
             }
 
             var taskItem = _mapper.Map<TaskItem>(taskItemCreateDto);
-            _taskItemRepository.Add(taskItem);
+            await _taskItemRepository.Add(taskItem, cancellationToken);
 
             return new SuccessResult();
         }
-        public IResult Update(TaskItemUpdateDto taskItemUpdateDto){
-            var validationResult = _updateValidator.Validate(taskItemUpdateDto);
+        public async Task<IResult> Update(TaskItemUpdateDto taskItemUpdateDto, CancellationToken cancellationToken){
+            var validationResult = await _updateValidator.ValidateAsync(taskItemUpdateDto, cancellationToken);
             if (!validationResult.IsValid){
                 return new ErrorResult(string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage)));
             }
 
-            var taskItem = _taskItemRepository.Get(taskItem => taskItem.Id == taskItemUpdateDto.Id);
+            var taskItem = await _taskItemRepository.Get(taskItem => taskItem.Id == taskItemUpdateDto.Id, cancellationToken);
             if(taskItem is null){
                 return new ErrorResult();
             }
 
             _mapper.Map(taskItemUpdateDto, taskItem);
-            _taskItemRepository.Update(taskItem);
+            await _taskItemRepository.Update(taskItem, cancellationToken);
 
             return new SuccessResult();
         }
-        public IResult Delete(int id){
+        public async Task<IResult> Delete(int id, CancellationToken cancellationToken){
 
-            var taskItem = _taskItemRepository.Get(taskItem => taskItem.Id == id);
+            var taskItem = await _taskItemRepository.Get(taskItem => taskItem.Id == id, cancellationToken);
             if(taskItem is null){
                 return new ErrorResult();
             }
 
-            _taskItemRepository.Delete(taskItem);
+            await _taskItemRepository.Delete(taskItem, cancellationToken);
 
             return new SuccessResult();
         }

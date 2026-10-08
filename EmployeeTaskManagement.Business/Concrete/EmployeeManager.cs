@@ -7,6 +7,7 @@ using EmployeeTaskManagement.Entities.Dtos.EmployeeDtos;
 using FluentValidation;
 using AutoMapper;
 using EmployeeTaskManagement.Entities.Concrete;
+using EmployeeTaskManagement.Entities.Dtos.TaskItemDtos;
 
 namespace EmployeeTaskManagement.Business.Concrete
 {
@@ -30,52 +31,58 @@ namespace EmployeeTaskManagement.Business.Concrete
             _updateValidator = updateValidator;
         }
 
-        public IDataResult<List<EmployeeDto>> GetAll(){
-            var employees = _employeeRepository.GetAll();
+        public async Task<IDataResult<List<EmployeeDto>>> GetAll(CancellationToken cancellationToken){
+            var employees = await _employeeRepository.GetAll(cancellationToken, null, e => e.Tasks);
             var dtos = _mapper.Map<List<EmployeeDto>>(employees);
 
             return new SuccessDataResult<List<EmployeeDto>>(dtos);
         }
-        public IDataResult<EmployeeDto> Get(int id){
-            var employee = _employeeRepository.Get(e => e.Id == id);
+        public async Task<IDataResult<EmployeeDto>> Get(int id, CancellationToken cancellationToken){
+            var employee = await _employeeRepository.Get(e => e.Id == id, cancellationToken, e => e.Tasks);
             var dto = _mapper.Map<EmployeeDto>(employee);
 
             return new SuccessDataResult<EmployeeDto>(dto);
         }
-        public IResult Create(EmployeeCreateDto employeeCreateDto){
-            var validationResult = _createValidator.Validate(employeeCreateDto);
+        public async Task<IDataResult<List<TaskItemDto>>> GetTasks(int id, CancellationToken cancellationToken){
+            var employee = await _employeeRepository.Get(e => e.Id == id, cancellationToken, e => e.Tasks);
+            var dto = _mapper.Map<List<TaskItemDto>>(employee.Tasks);
+
+            return new SuccessDataResult<List<TaskItemDto>>(dto);
+        }
+        public async Task<IResult> Create(EmployeeCreateDto employeeCreateDto, CancellationToken cancellationToken){
+            var validationResult = await _createValidator.ValidateAsync(employeeCreateDto, cancellationToken);
             if (!validationResult.IsValid){
                 return new ErrorResult(string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage)));
             }
 
             var employee = _mapper.Map<Employee>(employeeCreateDto);
-            _employeeRepository.Add(employee);
+            await _employeeRepository.Add(employee, cancellationToken);
 
             return new SuccessResult();
         }
-        public IResult Update(EmployeeUpdateDto employeeUpdateDto){
-            var validationResult = _updateValidator.Validate(employeeUpdateDto);
+        public async Task<IResult> Update(EmployeeUpdateDto employeeUpdateDto, CancellationToken cancellationToken){
+            var validationResult = await _updateValidator.ValidateAsync(employeeUpdateDto, cancellationToken);
             if (!validationResult.IsValid){
                 return new ErrorResult(string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage)));
             }
 
-            var employee = _employeeRepository.Get(employee => employee.Id == employeeUpdateDto.Id);
+            var employee = await _employeeRepository.Get(employee => employee.Id == employeeUpdateDto.Id, cancellationToken);
             if(employee is null){
                 return new ErrorResult();
             }
 
             _mapper.Map(employeeUpdateDto, employee);
-            _employeeRepository.Update(employee);
+            await _employeeRepository.Update(employee, cancellationToken);
 
             return new SuccessResult();
         }
-        public IResult Delete(int id){
-            var employee = _employeeRepository.Get(employee => employee.Id == id);
+        public async Task<IResult> Delete(int id, CancellationToken cancellationToken){
+            var employee = await _employeeRepository.Get(employee => employee.Id == id, cancellationToken);
             if(employee is null){
                 return new ErrorResult();
             }
 
-            _employeeRepository.Delete(employee);
+            await _employeeRepository.Delete(employee, cancellationToken);
 
             return new SuccessResult();
         }
