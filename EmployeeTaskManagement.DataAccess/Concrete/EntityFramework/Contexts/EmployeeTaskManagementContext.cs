@@ -19,6 +19,36 @@ namespace EmployeeTaskManagement.DataAccess.Concrete.EntityFramework.Contexts
             optionsBuilder.UseSqlite(ConnectionString);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.ToTable("Employees");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.FirstName).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.LastName).IsRequired().HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TaskItem>(entity =>
+            {
+                entity.ToTable("TaskItems");
+                entity.HasKey(t => t.Id);
+
+                entity.Property(t => t.Title).IsRequired().HasMaxLength(200);
+                entity.Property(t => t.Description).HasMaxLength(1000);
+
+                entity.HasOne(t => t.Employee)
+                    .WithMany(e => e.Tasks)
+                    .HasForeignKey(t => t.EmployeeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(t => t.EmployeeId);
+            });
+        }
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
     }

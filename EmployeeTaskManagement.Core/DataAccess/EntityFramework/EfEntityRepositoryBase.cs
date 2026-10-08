@@ -13,20 +13,31 @@ namespace EmployeeTaskManagement.Core.DataAccess.EntityFramework
 	where TEntity : class, IEntity, new()
 	where TContext : DbContext, new()
 	{
-        public async Task<IList<TEntity>> GetAll(CancellationToken cancellationToken, Expression<Func<TEntity, bool>>? filter = null)
+        public async Task<IList<TEntity>> GetAll(CancellationToken cancellationToken, Expression<Func<TEntity, bool>>? filter = null, params Expression<Func<TEntity, object>>[] includes)
 		{
 			using (var context = new TContext())
 			{
-				return filter == null ? 
-					await context.Set<TEntity>().ToListAsync(cancellationToken) :
-					await context.Set<TEntity>().Where(filter).ToListAsync(cancellationToken);
+                IQueryable<TEntity> query = context.Set<TEntity>();
+
+    			foreach (var include in includes)
+        			query = query.Include(include);
+
+    			if (filter != null)
+        			query = query.Where(filter);
+
+    			return await query.ToListAsync(cancellationToken);
 			}
 		}
-        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
+        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] includes)
 		{
 			using (var context = new TContext())
 			{
-				return await context.Set<TEntity>().SingleOrDefaultAsync(filter, cancellationToken);
+				IQueryable<TEntity> query = context.Set<TEntity>();
+
+    			foreach (var include in includes)
+        			query = query.Include(include);
+
+    			return await query.SingleOrDefaultAsync(filter, cancellationToken);
 			}
 		}
 		public async Task Add(TEntity entity, CancellationToken cancellationToken)

@@ -10,8 +10,8 @@ namespace EmployeeTaskManagement.Core.DataAccess
 {
 	public interface IEntityRepository<T> where T:class,IEntity,new()
 	{
-		Task<IList<T>> GetAll(CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null);
-		Task<T> Get(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
+		Task<IList<T>> GetAll(CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null, params Expression<Func<T, object>>[] includes);
+		Task<T> Get(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes);
 		Task Add(T entity, CancellationToken cancellationToken);
 		Task Update(T entity, CancellationToken cancellationToken);
 		Task Delete(T entity, CancellationToken cancellationToken);
