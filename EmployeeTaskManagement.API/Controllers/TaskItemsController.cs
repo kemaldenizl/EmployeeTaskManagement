@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EmployeeTaskManagement.Business.Abstract;
 using EmployeeTaskManagement.Entities.Dtos.TaskItemDtos;
 using Microsoft.AspNetCore.Mvc;
@@ -15,44 +16,37 @@ namespace EmployeeTaskManagement.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var result = _taskItemService.GetAll();
+            var result = await _taskItemService.GetAll(cancellationToken);
             return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("employee/{employeeId:int}")]
-        public IActionResult GetAllFromEmployee(int employeeId)
-        {
-            var result = _taskItemService.GetAllFromEmployee(employeeId);
-            return result.Success ? Ok(result) : NotFound(result);
         }
  
         [HttpGet("{id:int}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
-            var result = _taskItemService.Get(id);
+            var result = await _taskItemService.Get(id, cancellationToken);
             return result.Success ? Ok(result) : NotFound(result);
         }
  
         [HttpPost]
-        public IActionResult Add(TaskItemCreateDto dto)
+        public async Task<IActionResult> Add(TaskItemCreateDto dto, CancellationToken cancellationToken)
         {
-            var result = _taskItemService.Create(dto);
+            var result = await _taskItemService.Create(dto, cancellationToken);
             return result.Success ? Ok(result) : BadRequest(result);
         }
  
         [HttpPut]
-        public IActionResult Update(TaskItemUpdateDto dto)
+        public async Task<IActionResult> Update(TaskItemUpdateDto dto, CancellationToken cancellationToken)
         {
-            var result = _taskItemService.Update(dto);
+            var result = await _taskItemService.Update(dto, cancellationToken);
             return result.Success ? Ok(result) : BadRequest(result);
         }
  
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var result = _taskItemService.Delete(id);
+            var result = await _taskItemService.Delete(id, cancellationToken);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }
