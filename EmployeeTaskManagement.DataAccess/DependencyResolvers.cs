@@ -10,6 +10,7 @@ namespace EmployeeTaskManagement.DataAccess
         {
             services.AddScoped<IEmployeeRepository, EfEmployeeRepository>();
             services.AddScoped<ITaskItemRepository, EfTaskItemRepository>();
+            services.AddScoped<IUserRepository, EfUserRepository>();
 
             return services;
         }
